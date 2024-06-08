@@ -1,12 +1,12 @@
 import { MdVideoCall } from "react-icons/md";
 import { IoLogoYoutube } from "react-icons/io";
 import { FaRegUserCircle } from "react-icons/fa";
-
+import { SiGamejolt } from "react-icons/si";
 export function NavBar(){
     return <div className="flex justify-between border-b-2 border-hidden my-2">
         <div className="flex flex-col justify-center ml-5 text-3xl font-mono cursor-pointer">
             <div className="flex">
-                <IoLogoYoutube size={36}  className="mx-auto text-red-500 mr-2"/>
+                <SiGamejolt size={36}  className="mx-auto text-red-500 mr-2"/>
                 <div className="flex font-bold">
                     Steve
                 </div>
