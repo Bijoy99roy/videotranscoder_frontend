@@ -24,7 +24,7 @@ export function NavBar(){
                    
                 </div>
             
-            <div className="flex flex-col items-center justify-center rounded-2xl pr-3 py-2 bg-slate-100 my-2 cursor-pointer">
+            <div className="flex flex-col items-center justify-center rounded-3xl px-2 py-2 bg-slate-100 my-2 cursor-pointer">
                 <div className="flex">
                     <FaRegUserCircle size={24}  className="mx-auto text-blue-500 mr-2"/>
                     <div className="flex font-bold text-blue-500">
