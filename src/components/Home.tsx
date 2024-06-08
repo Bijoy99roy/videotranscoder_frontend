@@ -4,11 +4,11 @@ import { VideoLib } from "./VideoLibs";
 
 export function Home() {
 
-    const [videoSources, setVideoSources] = useState([]);
+    const [videoSources, setVideoSources] = useState<string[]>([]);
 
     async function fetchVideoSources() {
-        const response = await getVideoSourceList();
-        setVideoSources(response);
+        // const response = await getVideoSourceList();
+        setVideoSources([""]);
     }
 
     useEffect(() => {

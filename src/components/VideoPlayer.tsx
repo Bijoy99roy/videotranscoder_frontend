@@ -37,7 +37,7 @@ export const VideoPlayer = ({ videoSource }: { videoSource: string}) => {
         },
         sources: [
             {
-                src: videoSource,
+                src: "http://localhost:3000/uploads/hls-videos/c991aa3c-7924-47c8-88cb-fa692b887d8f/playlist.m3u8",
                 type: 'application/x-mpegURL'
             }
         ]
@@ -64,9 +64,13 @@ export const VideoPlayer = ({ videoSource }: { videoSource: string}) => {
           videoElement.classList.add('vjs-big-play-centered');
           // videoElement.classList.add("vjs-default-skin");
             // videoElement.classList.add('vjs-http-source-selector');
-          videoRef.current.appendChild(videoElement);
-
-          const player = (playerRef.current = videojs(videoElement, videoPlayerOptions, () => {
+            // if (!playerReady){
+              videoRef.current.appendChild(videoElement);
+              console.log("player")
+            //   setplayerReady(true)
+            // }
+            
+            const player = (playerRef.current =  videojs(videoElement, videoPlayerOptions, () => {
             // console.log(videoPlayerOptions.sources[0])
             //   player.src(videoPlayerOptions.sources[0])
             player.on('ready',  () => {
@@ -92,15 +96,18 @@ export const VideoPlayer = ({ videoSource }: { videoSource: string}) => {
             
             
         } else {
-          console.log('else')
           
+          // if (playerRef.current) {
+            console.log('else')
             const player = playerRef.current;
 
-            
+            player.autoplay(videoPlayerOptions.autoplay)
             player.src(videoPlayerOptions.sources)
             
-            player.autoplay(videoPlayerOptions.autoplay)
-            playerRef.current = null;
+            
+            
+          // }
+            
         }
     }, [videoPlayerOptions, videoRef]);
 
