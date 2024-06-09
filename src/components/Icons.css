@@ -1,0 +1,30 @@
+.MdVideoCall{
+    font-size: 1.5rem;
+  }
+  
+  @media only screen and (max-width: 768px) {
+    .MdVideoCall {
+      font-size: 1rem;
+    }
+  }
+
+
+.FaRegUserCircle{
+    font-size: 1.5rem;
+  }
+  
+@media only screen and (max-width: 768px) {
+.FaRegUserCircle {
+    font-size: 1rem;
+}
+}
+
+.SiGamejolt{
+    font-size: 2rem;
+  }
+  
+@media only screen and (max-width: 768px) {
+.SiGamejolt {
+    font-size: 1.3rem;
+}
+}

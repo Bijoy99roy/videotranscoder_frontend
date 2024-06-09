@@ -1,0 +1,39 @@
+.video-js {
+    font-size: 10px;
+    color: #fefefe;
+  }
+
+  @media only screen and (max-width: 768px) {
+    .video-js {
+        font-size: 9px;
+    }
+  }
+  
+  .vjs-control-bar {
+    background: rgba(3, 156, 16, 0.5);
+  }
+  
+  /* .vjs-play-control {
+    background-color: aqua;
+  } */
+  
+  .vjs-volume-panel .vjs-volume-level {
+    background: #f5f5f5;
+  }
+  
+  .vjs-progress-holder {
+    background: rgba(252, 252, 252, 0.3);
+  }
+
+  .vjs-menu-button.vjs-menu-button-popup.vjs-icon-cog.vjs-button{
+    font-size: 15px;
+  }
+
+  .vjs-play-progress.vjs-slider-bar{
+    background-color: red;
+  }
+
+
+.vjs-progress-control:hover  .vjs-play-progress {
+    color: red;
+ }
