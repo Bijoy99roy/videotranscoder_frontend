@@ -110,7 +110,7 @@ export const VideoPlayer = () => {
 
     return <div data-vjs-player>
 
-          <div ref={videoRef} className=""/>
+          <div ref={videoRef}/>
  
         </div>
 };
