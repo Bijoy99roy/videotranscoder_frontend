@@ -28,3 +28,35 @@
     font-size: 1.3rem;
 }
 }
+
+.AiOutlineLike{
+  font-size: 1.3rem;
+}
+
+@media only screen and (max-width: 768px) {
+  .AiOutlineLike {
+      font-size: 1.2rem;
+  }
+  }
+
+  .AiOutlineDislike{
+    font-size: 1.2rem;
+    margin-top: 2px;
+  }
+  
+  @media only screen and (max-width: 768px) {
+    .AiOutlineDislike {
+        font-size: 1.2rem;
+        margin-top: 3px;
+    }
+    }
+
+.PiShareFat {
+  font-size: 1.3rem;
+}
+
+@media only screen and (max-width: 768px) {
+  .AiOutlineDislike {
+      font-size: 1.2rem;
+  }
+  }
