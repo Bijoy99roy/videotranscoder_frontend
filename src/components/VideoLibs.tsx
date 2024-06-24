@@ -1,4 +1,4 @@
-import { VideoPlayer } from "./VideoPlayer"
+import { VideoPlayer } from "./VideoPlayer/VideoPlayer"
 
 export const VideoLib = ({ videoSources }: { videoSources: string[]}) => {
     return (

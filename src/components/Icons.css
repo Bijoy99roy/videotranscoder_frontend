@@ -60,3 +60,22 @@
       font-size: 1.2rem;
   }
   }
+
+.CiEdit{
+  font-size:2rem;
+}
+
+.MdDeleteOutline{
+  font-size:2rem;
+}
+
+.MdFileUpload{
+  font-size:10rem;
+}
+
+@media only screen and (max-width: 768px) {
+  .MdFileUpload {
+      font-size: 6rem;
+      margin-left: 10px;
+  }
+  }

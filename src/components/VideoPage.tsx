@@ -1,7 +1,8 @@
+import { Description } from "./Description";
 import { NavBar } from "./NavBar";
 import { TitleBar } from "./TitleBar";
 import { VideoCards, VideoCardsHorizontal } from "./VideoCards";
-import { VideoPlayer } from "./VideoPlayer";
+import { VideoPlayer } from "./VideoPlayer/VideoPlayer";
 import { useWindowSize } from "@uidotdev/usehooks";
 export function VideoPage(){
     const size = useWindowSize();
@@ -16,7 +17,7 @@ export function VideoPage(){
                     {/* </div> */}
                     <TitleBar />
                 {/* </div> */}
-                
+                <Description />
             </div>
             
             {/* <div className="mt-10 md:mt-0 mx-2"> */}

@@ -1,6 +1,7 @@
 import { AiOutlineDislike, AiOutlineLike } from "react-icons/ai";
 import { PiShareFat } from "react-icons/pi";
 import "./Icons.css"
+import { Tooltip } from "@mui/material";
 export function TitleBar() {
 
     return (
@@ -11,7 +12,10 @@ export function TitleBar() {
                     <div className="flex">
                         <span className="flex justify-center items-center rounded-full md:w-10 md:h-10 w-8 h-8 bg-teal-300 cursor-pointer">B</span>
                         <div className="flex md:flex-col ml-2">
-                            <span className="font-semibold md:text-lg text-sm cursor-pointer">ByteByteGo</span>
+                            <Tooltip title="ByteByteGo" placement="top">
+                                <span className="font-semibold md:text-lg text-sm cursor-pointer">ByteByteGo</span>
+                            </Tooltip>
+                            {/* <span className="font-semibold md:text-lg text-sm cursor-pointer">ByteByteGo</span> */}
                             <span className="md:ml-0 ml-1 text-sm text-slate-500">127k Subscriber</span>
                         </div>
                     </div>
@@ -20,23 +24,28 @@ export function TitleBar() {
                 </div>
                 <div className="flex items-center space-x-4 md:mt-0 mt-3">
                     <div className="flex items-center cursor-pointer">
+                    <Tooltip title="I like this" placement="top">
                         <div className="flex hover:bg-slate-300 bg-slate-200 rounded-l-3xl space-x-2 md:px-4 md:py-2 px-2 py-1">
                             <AiOutlineLike  className="AiOutlineLike"/>
                             <span className="md:text-base text-sm">56</span>
                         </div>
+                    </Tooltip>
                         <span className="border-l border-black h-6"></span>
+                        <Tooltip title="I dislike this" placement="top">
                         <div className="flex  hover:bg-slate-300 bg-slate-200 rounded-r-3xl space-x-2 md:px-4 md:py-2 px-2 py-1">
                             <AiOutlineDislike   className="AiOutlineDislike"/>
                             <span className="md:text-base text-sm">67</span>
                         </div>
+                    </Tooltip>
                         
                         
                     </div>
-                        
+                    <Tooltip title="Share" placement="top">
                     <div className="flex items-center space-x-2 bg-slate-200 rounded-3xl md:px-4 md:py-2 px-3 py-1 cursor-pointer hover:bg-slate-300">
                         <PiShareFat  className="PiShareFat"/>
                         <span className="md:text-base text-sm">Share</span>
                     </div>
+                    </Tooltip>
                 </div>
             </div>
         </div>
