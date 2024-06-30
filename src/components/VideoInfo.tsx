@@ -5,6 +5,10 @@ import { HiUpload } from "react-icons/hi";
 import { Tooltip } from "@mui/material";
 import { useWebSocket } from "../context/useSocketContext";
 import { AuthContext } from "../context/authContext";
+import { updateVideoDetails, uploadThumbnail } from "../services/uploadService";
+import { getVideoInfo } from "../services/videos";
+import { useAsyncFn } from "../hooks/useAsync";
+import { useDebounce } from "../hooks/useDebounce";
 
 
 export function VideoInfo({isOpen=false, onClose, videoInfo}:{isOpen?:boolean, onClose?:()=>void, videoInfo:any}){
@@ -15,14 +19,41 @@ export function VideoInfo({isOpen=false, onClose, videoInfo}:{isOpen?:boolean, o
     const descriptionRef = useRef<HTMLTextAreaElement>(null);
     const { messages, sendMessage } = useWebSocket();
     const [inputValue, setInputValue] = useState<string>('');
-    const [processingStatus, setProcessingStatus] = useState("Video Processing" )
+    const [processingStatus, setProcessingStatus] = useState("Video Processing")
+    const [thumbnailUrl, setThumbnailUrl] = useState(videoInfo.thumbnailUrl)
+    const {error:uploadThumbnailError, loading: uploadThumbnailLoading, value: uploadThumbnailValue, execute: uploadThumbnailFn} = useAsyncFn(uploadThumbnail)
+    const {error:getVideoInfoError, loading: getVideoInfoLoading, value: getVideoInfoValue, execute: getVideoInfoFn} = useAsyncFn(getVideoInfo)
+    const {error:updateVideoDetailsError, loading: updateVideoDetailsLoading, value: updateVideoDetailsValue, execute: updateVideoDetailsFn} = useAsyncFn(updateVideoDetails)
+    const [saving, setSaving] = useState(false)
+    const debounceDetails = useDebounce({
+        title: title,
+        description: description
+    })
+    const hiddenFileInput = useRef<HTMLInputElement>(null);
+
+    const handleClick = () => {
+        if (hiddenFileInput.current) {
+            hiddenFileInput.current.click();
+        }
+    };
+
+    const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0];
+        if (file) {
+            const uploadResult = await uploadThumbnailFn(file, videoInfo.id)
+            const videoInfoResult = await getVideoInfoFn(uploadResult.videoId);
+            setThumbnailUrl(videoInfoResult.thumbnailUrl);
+        }
+    };
 
     useEffect(()=>{
         if (messages.length>0){
             const data =JSON.parse(messages[0])
             console.log(data)
             const status = data.status
-            setProcessingStatus(status=="Failed" ? "Video Processing Failed" : "Video Processed")
+            const thumbnail = data.thumbnailUrl
+            setThumbnailUrl(thumbnail)
+            setProcessingStatus(status=="Failed" ? "Video Processing Failed" : "Video Processed")                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
             console.log(`Websocket:  ${status}`)
         }
         
@@ -67,6 +98,28 @@ export function VideoInfo({isOpen=false, onClose, videoInfo}:{isOpen?:boolean, o
       }
     }, []);
 
+    useEffect(() => {
+
+            setSaving(true)
+        console.log(updateVideoDetailsLoading)
+        // console.log(debouncedSearch)
+
+           updateVideoDetailsFn(videoInfo.id, title, description)
+            .then((saved: boolean)=>{
+                // console.log(`saved? ${saved}`)
+                if (saved){
+                    setTimeout(() => {
+                        setSaving(false)
+                    }, 500);
+                    
+                }
+            })
+            
+        
+        
+        
+      }, [title, description]);
+
     return <>
         <Modal open={isOpen} onClose={onClose} enableClickEvents={true}>
             <div className="flex flex-col justify-between my-5">
@@ -90,20 +143,25 @@ export function VideoInfo({isOpen=false, onClose, videoInfo}:{isOpen?:boolean, o
                         </div>
 
                         <div className="flex gap-x-2">
-                            <span className="flex justify-center items-center text-sm bg-slate-200 py-5 w-24">upload thumbnail+</span>
-                            <img src="" alt="noImage" className="bg-slate-200"/>
+                            <span className="flex justify-center items-center text-sm bg-slate-200 py-5 w-32" onClick={handleClick}>upload thumbnail+</span>
+                            <input type="file"ref={hiddenFileInput} onChange={handleFileChange} className="hidden" accept="image/*"/>
+                            <img src={thumbnailUrl} alt="noImage" className="bg-slate-200 w-32 h-24"/>
                         </div>
                     </div>
                     <div className="flex flex-col">
                         <div className="flex h-36 w-60 bg-slate-300 justify-center items-center">
+                            { thumbnailUrl ? 
+                            <img src={thumbnailUrl} alt="noImage" className="h-36 w-60"/>
+                            :
                             <span>Processing...</span>
+                            }
                         </div>
 
                         <div className="flex flex-col w-60 bg-slate-700 text-white mt-1 pl-2">
                             <span className="text-xs">Video Link</span>
                             <a href="http://google.com">Google</a>
                             <span className="text-xs">File Name</span>
-                            <span className="text-wrap">How_to_create_youtube.mp4</span>
+                            <span className="text-wrap">{title}</span>
                         </div>
                     </div>
                 </div>
@@ -112,7 +170,7 @@ export function VideoInfo({isOpen=false, onClose, videoInfo}:{isOpen?:boolean, o
                     <div className="flex gap-x-2">
                     <Tooltip title={processingStatus} placement="top" className="z-50">
                         <div>
-                            <PiHighDefinitionFill size={24} color="blue"/>
+                            <PiHighDefinitionFill size={24} className={`${processingStatus == "Video Processed" ? "text-blue-800" : "text-blue-800 animate-pulse"}`}/>
                         </div>
                         
                     </Tooltip>
@@ -121,7 +179,8 @@ export function VideoInfo({isOpen=false, onClose, videoInfo}:{isOpen?:boolean, o
                         <HiUpload size={24} color="blue"/>
                     </div>
                     </Tooltip>
-                        
+                    
+                    {updateVideoDetailsLoading===true ? <span>Saving...</span> : <span>Saved</span>}
                     </div>
                     
                     <button className="px-4 py-1 rounded-md bg-blue-500 text-white">Submit</button>

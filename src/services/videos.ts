@@ -6,10 +6,7 @@ export async function getVideoInfo(videoId: string){
         method: "GET"
     });
 
-    return {
-        title: video.data.title,
-        description: video.data.description
-    }
+    return video.data
 } 
 
 export async function getVideos(){
@@ -18,4 +15,28 @@ export async function getVideos(){
     })
 
     return video.data
+}
+
+export async function getChannelVideos(userId: string){
+    const video = await makeRequests(`/api/v1/video/uploadedVideos/${userId}`, {
+        method: "GET"
+    })
+    console.log(video)
+    return video.data
+}
+
+export async function deleteVideo(videoId: string){
+    try{
+        const video = await makeRequests(`/api/v1/video/deleteFolder`, {
+            method: "POST",
+            data:{
+                videoId: videoId
+            }
+        })
+        console.log(video)
+        return video.data
+    } catch(error) {
+        return false
+    }
+    
 }

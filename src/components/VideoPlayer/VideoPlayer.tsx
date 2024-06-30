@@ -11,14 +11,14 @@ import "../video.css"
 // import 'videojs-seek-buttons';
 // import 'videojs-seek-buttons/dist/videojs-seek-buttons.css';
 
-export const VideoPlayer = () => {
+export const VideoPlayer = ({src}:{src:string}) => {
     const videoRef = useRef<any>(null);
     const playerRef = useRef<any>(null);
     const [playerReady, setplayerReady] = useState(false);
 
     const videoPlayerOptions = {
       responsive: true,
-        autoplay: false,
+        autoplay: true,
         fluid: true,
           controls: true,
           playbackRates: [0.5, 1, 1.5, 2],
@@ -38,7 +38,7 @@ export const VideoPlayer = () => {
         },
         sources: [
             {
-                src: "https://storage.googleapis.com/transcode-1/c47708d0-90f6-4fd0-94bd-8e0124fae290/playlist.m3u8",
+                src: src,
                 // src: "http://localhost:3000/hls-videos/9f0008d2-37c3-487c-b7ff-d9e162bdc2f3/playlist.m3u8",
                 type: 'application/x-mpegURL'
             }

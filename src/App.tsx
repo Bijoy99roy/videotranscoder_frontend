@@ -18,7 +18,7 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path='/' element={<HomePage />}/>
-          <Route path='/watch' element={<VideoPage />}/>
+          <Route path='/watch/:videoId' element={<VideoPage />}/>
           <Route path='/channel' element={<UploadPage />}/>
         </Routes>
       </BrowserRouter>

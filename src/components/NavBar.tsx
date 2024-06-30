@@ -46,7 +46,7 @@ export function NavBar({isUploadPage=false, onUploadClick}:{isUploadPage?:boolea
             <div className="flex">
                 <SiGamejolt  className="mx-auto text-red-500 mr-2 SiGamejolt"/>
                 <div className="flex font-bold">
-                    Steve
+                    Nyx
                 </div>
             </div>
         </div>
