@@ -1,5 +1,5 @@
 import { MdDelete } from "react-icons/md"
-import { Modal } from "./Modal"
+import { Modal } from "../common/Modal"
 
 export function DeleteModal({isOpen=false, onClose, onDeleteHandle, videoId}:{isOpen?:boolean, onClose:()=>void, onDeleteHandle:(event: any)=>void, videoId:string}) {
     return <div>

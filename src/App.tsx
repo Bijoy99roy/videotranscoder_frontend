@@ -1,12 +1,17 @@
 import { useState } from 'react'
 import './App.css'
-import { Home } from './components/Home'
+
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { HomePage } from './pages/HomePage'
-import { VideoPage } from './components/VideoPage'
+import { VideoPage } from './pages/VideoPage'
 import { UploadPage } from './pages/UploadPage'
 import { AuthProvider } from './context/authContext'
 import { WebSocketProvider } from './context/useSocketContext'
+import { LoggedInRoutes } from './utils/LoggedInRoutes'
+import { PrivateRoutes } from './utils/PrivateRoutes'
+import { ChannelPage } from './pages/ChannelPage'
+import { LikedVideoPage } from './pages/LikedVideoPage'
+import { SubscriptionPage } from './pages/SubscriptionPage'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -19,7 +24,10 @@ function App() {
         <Routes>
           <Route path='/' element={<HomePage />}/>
           <Route path='/watch/:videoId' element={<VideoPage />}/>
-          <Route path='/channel' element={<UploadPage />}/>
+          <Route path='/account/:channelId' element={<ChannelPage />}/>
+          <Route path='/channel' element={<PrivateRoutes children={<UploadPage />} />}/>
+          <Route path='/liked-videos' element={<PrivateRoutes children={<LikedVideoPage />} />}/>
+          <Route path='/subscriptions' element={<PrivateRoutes children={<SubscriptionPage />} />}/>
         </Routes>
       </BrowserRouter>
       </WebSocketProvider>

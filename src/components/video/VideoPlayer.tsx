@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import videojs from "video.js";
 import 'videojs-seek-buttons/dist/videojs-seek-buttons.css';
 import 'videojs-seek-buttons';
@@ -6,7 +6,7 @@ import "video.js/dist/video-js.css";
 import "videojs-contrib-quality-levels";
 // import 'videojs-contrib-hls';
 import "videojs-http-source-selector";
-import "../video.css"
+import "../css/video.css"
 
 // import 'videojs-seek-buttons';
 // import 'videojs-seek-buttons/dist/videojs-seek-buttons.css';
@@ -47,7 +47,7 @@ export const VideoPlayer = ({src}:{src:string}) => {
 
     const handlePlayerReady = (player: any) => {
         playerRef.current = player;
-        // player.seekable
+
         player.on('waiting',  () => {
             videojs.log("player is waiting");
         })
@@ -65,7 +65,7 @@ export const VideoPlayer = ({src}:{src:string}) => {
           videoElement.classList.add('vjs-big-play-centered');
 
               videoRef.current.appendChild(videoElement);
-              console.log("player")
+
  
             const player = (playerRef.current =  videojs(videoElement, videoPlayerOptions, () => {
 
@@ -84,7 +84,7 @@ export const VideoPlayer = ({src}:{src:string}) => {
             
         } else {
           
-            console.log('else')
+
             const player = playerRef.current;
 
             player.autoplay(videoPlayerOptions.autoplay)
@@ -115,3 +115,4 @@ export const VideoPlayer = ({src}:{src:string}) => {
  
         </div>
 };
+export const MemoizedVideoPlayer = React.memo(VideoPlayer);

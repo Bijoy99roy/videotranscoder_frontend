@@ -1,10 +1,10 @@
-import axios from "axios";
+import axios, { AxiosProgressEvent } from "axios";
 import { makeRequests } from "./makeRequests";
 
-export async function uploadVideo(video:any){
+export async function uploadVideo(video:any, onProgress: (progress: number) => void){
     const contentType = video.type
     const fileName = video.name
-    console.log(fileName)
+
     try {
 
         const response = await makeRequests("/api/v1/upload/generateSignedUrlWrite",{
@@ -15,19 +15,10 @@ export async function uploadVideo(video:any){
                 type: "video"
             }
         })
-        // const response = await axios.get("http://localhost:3000/api/v1/upload/generateSignedUrlWrite",{
-        //     params:{
-        //         fileName: fileName,
-        //         contentType: contentType
-        //     },
-        //     withCredentials: true,
-        // }
-        // );
 
-        console.log("After signed url")
-        console.log(response)
+
         if (response.status == 200) {
-            console.log(response)
+
             const {signedUrl, videoId} = response.data
             
             await axios.put(signedUrl, video,{
@@ -35,6 +26,13 @@ export async function uploadVideo(video:any){
                     "Content-Type": contentType,
                     "Accept": 'application/json'
                      
+                },
+                onUploadProgress: (progressEvent: AxiosProgressEvent) => {
+                    if (progressEvent.total) {
+                        const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+                        onProgress(percentCompleted);
+
+                    }
                 }
             })
             
@@ -60,16 +58,16 @@ export async function uploadVideo(video:any){
             // });
 
             if (responseTranscoding.status === 200) {
-                console.log("Video upload and transcoding queued successfully.");
+
                 return {isUploaded:true, videoId: videoId}
             } else {
-                console.error("Failed to queue transcoding:", responseTranscoding.data);
+
                 return {isUploaded:false, videoId: ""}
             }
 
         }
     } catch (error) {
-        console.error("Error uploading video:", error);
+
         return {isUploaded:false, videoId: ""}
     }
     
@@ -92,12 +90,11 @@ export async function uploadThumbnail(image:any, videoId: string) {
             }
         })
 
-        console.log("After signed url")
-        console.log(response)
+
         if (response.status == 200) {
-            console.log(response)
+
             const {signedUrl, videoId} = response.data
-            
+
             await axios.put(signedUrl, image,{
                 headers:{
                     "Content-Type": contentType,
@@ -122,6 +119,22 @@ export async function updateVideoDetails(videoId: string, title: string, descrip
                 videoId: videoId,
                 title: title,
                 description: description
+            }
+        })
+        return video.data
+    } catch (error) {
+        console.log("Error occured while updating video details")
+        return false
+    }
+    
+}
+
+export async function publishVideo(videoId: string){
+    try{
+        const video = await makeRequests(`/api/v1/upload/publish`, {
+            method: "PUT",
+            data:{
+                videoId: videoId,
             }
         })
         return video.data

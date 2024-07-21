@@ -25,8 +25,7 @@ function useAsyncInternal(func: any, dependencies: any, initialLoading = false) 
     const [value, setValue] = useState<any | undefined>()
 
     const execute = useCallback((...params: any[]) => {
-        console.log("...")
-        console.log(params)
+
         setLoading(true);
         return func(...params).then((data: any )=> {
             setValue(data);

@@ -15,6 +15,7 @@
     "@mui/material": "^5.15.20",
     "@uidotdev/usehooks": "^2.4.1",
     "axios": "^1.7.2",
+    "browser-image-compression": "^2.0.2",
     "hls.js": "^1.1.5",
     "plyr-react": "^5.3.0",
     "prop-types": "^15.8.1",

@@ -1,34 +1,28 @@
-import { useContext, useEffect, useRef, useState } from "react";
-import { NavBar } from "../components/NavBar";
-import { Table } from "../components/Table";
-import { UploadModal } from "../components/UploadModal";
-import { VideoInfo } from "../components/VideoInfo";
+import { Suspense, useContext, useEffect, useRef, useState } from "react";
+import { NavBar } from "../components/navigation/NavBar";
+import { Table } from "../components/content/Table";
+import { UploadModal } from "../components/upload/UploadModal";
+import { VideoInfo } from "../components/upload/VideoInfo";
 import { useModal } from "../hooks/useModal";
-import { deleteVideo, getChannelVideos, getVideoInfo } from "../services/videos";
+import { deleteVideo, getChannelVideos, getVideoInfo } from "../services/videosService";
 import { uploadVideo } from "../services/uploadService";
 import { useAsyncFn } from "../hooks/useAsync";
 import { AuthContext } from "../context/authContext";
-import { DeleteModal } from "../components/DeleteModal";
-
-interface VideoInformation{
-    title: string;
-    description: string;
-}
-
-interface Error {
-    message: string[];
-    statusCode: number;
-  }
+import { DeleteModal } from "../components/upload/DeleteModal";
+import { ProfileDrowDown } from "../components/user/ProfileDrowDown";
+import { useWebSocket } from "../context/useSocketContext";
 
 export function UploadPage() {
 
     const { isOpen: isOpenUpload, openModal: openModalUpload, closeModal: closeModalUpload } = useModal();
     const { isOpen: isOpenVideoInfo, openModal: openModalVideoInfo, closeModal: closeModalVideoInfo } = useModal();
     const { isOpen: isOpenDeleteVideo, openModal: openModalDeleteVideo, closeModal: closeModalDeleteVideo } = useModal();
-
+    const [openProfile, setOpenProfile] = useState<boolean>(true);
     const [uploadedVideos, setUploadedVideos] = useState();
+    const [progress, setProgress] = useState<number>(-1);
     const [selectedVideoInfo, setSelectedVideoInfo] = useState<any>(null);
-    const { user, setUser, userData, setUserData } = useContext(AuthContext);
+    const { user } = useContext(AuthContext);
+    const { messages, sendMessage } = useWebSocket();
 
     const hiddenFileInput = useRef<HTMLInputElement>(null);
 
@@ -37,43 +31,59 @@ export function UploadPage() {
             hiddenFileInput.current.click();
         }
     };
-    const { loading: loadingDeleteVideo, error: errorDeleteVideo, value: DeleteVideo, execute: DeleteVideoFn } = useAsyncFn(deleteVideo)
+    const {  execute: DeleteVideoFn } = useAsyncFn(deleteVideo)
 
-    const { loading: loadingVideoInfo, error: errorVideoInfo, value: videoInfo, execute: fetchVideoInfo } = useAsyncFn(async (videoId: string) => {
-        return await getVideoInfo(videoId);
-    });
+    const {  error: errorVideoInfo,  execute: fetchVideoInfo } = useAsyncFn(getVideoInfo);
+    const { loading: loadinguploadedVideos, value: uploadedVideosData, execute: fetchUploadedVideos } = useAsyncFn(getChannelVideos)
 
-    const { loading: loadinguploadedVideos, error: errorUploadedVideos, value: uploadedVideosData, execute: fetchUploadedVideos } = useAsyncFn(async (userId: string) => {
-        const response =  await getChannelVideos(userId);
-        console.log(response)
-        if (response){
-            console.log(uploadedVideosData)
-            setUploadedVideos(uploadedVideosData)
-        }
-        return response;
-    });
+    const { loading: loadingUpload, error: errorUpload, execute: handleUpload } = useAsyncFn(uploadVideo)
+
+    useEffect(()=>{
+
+            const payload = {
+                type: "register",
+                userId: user.id,
+            }
+            sendMessage(JSON.stringify(payload));
+        
+    }, [user.id])
 
     useEffect(() => {
+        const fetchVideos = async () => {
         if (user && user.id) {
-          fetchUploadedVideos(user.id)
+          const uploadedVideos = await fetchUploadedVideos(user.id)
+          setUploadedVideos(uploadedVideos)
         }
-      }, [user, fetchUploadedVideos]);
+    }
+    fetchVideos();
+      }, [user?.id]);
 
-    const { loading: loadingUpload, error: errorUpload, execute: handleUpload } = useAsyncFn(async (file: File) => {
-        const response = await uploadVideo(file);
-        if (response?.isUploaded) {
+    useEffect(() => {
+        const handler = (event:any) => {
+          event.preventDefault();
+          event.returnValue = '';
+        };
+
+        if (loadingUpload) {
+          window.addEventListener('beforeunload', handler);
+
+          return () => {
+            window.removeEventListener('beforeunload', handler);
+          };
+        }
+
+        return () => {};
+      }, [loadingUpload]);
+
+    const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0];
+        if (file) {
+            const response = await handleUpload(file, setProgress);
             const videoData = await fetchVideoInfo(response.videoId);
             setSelectedVideoInfo(videoData)
             closeModalUpload();
             openModalVideoInfo();
-        }
-        return response;
-    });
-
-    const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const file = event.target.files?.[0];
-        if (file) {
-            handleUpload(file);
+            setProgress(-1)
         }
     };
 
@@ -83,11 +93,11 @@ export function UploadPage() {
     }
 
     async function onClickEdit(videoId: string) {
-        console.log(videoId)
+
         const response = await fetchVideoInfo(videoId)
         setSelectedVideoInfo(response)
         if (response) {
-            console.log(response)
+ 
             openModalVideoInfo();
         }
         
@@ -95,34 +105,37 @@ export function UploadPage() {
     };
 
     async function onClickDelete(videoId: string) {
-        console.log(videoId)
+
         const response =  await DeleteVideoFn(videoId)
         // setUploadedVideos(response)
-        console.log(response)
+
+        const uploadedVideos = await fetchUploadedVideos(user.id)
+        setUploadedVideos(uploadedVideos)
     }
 
     async function openDeleteModal(videoId: string){
-        console.log(videoId)
+
         const response = await fetchVideoInfo(videoId)
         setSelectedVideoInfo(response)
         if (response) {
-            console.log(response)
+
             openModalDeleteVideo();
         }
     }
 
     return <>
-        <NavBar isUploadPage={true} onUploadClick={openModalUpload}/>
-        {/* <VideoInfo isOpen={isOpenVideoInfo} onClose={closeModalVideoInfo} videoInfo={videoInfo}/> */}
-        {loadingUpload && <p>Uploading...</p>}
+        <NavBar isUploadPage={true} onUploadClick={openModalUpload} onClickOpenProfile={setOpenProfile}/>
+        <ProfileDrowDown hide={openProfile}/>
+
         {errorUpload && <p>Error during upload: {errorUpload.message}</p>}
-        {loadingVideoInfo && <p>Loading video info...</p>}
+
         {errorVideoInfo && <p>Error fetching video info: {errorVideoInfo.message}</p>}
         {selectedVideoInfo  && <VideoInfo isOpen={isOpenVideoInfo} onClose={closeVideoInfoModal} videoInfo={selectedVideoInfo } />}
-        {/* {loading && <p>Loading...</p>}
-        {error && <p>Error: {error}</p>} */}
-        <UploadModal isOpen={isOpenUpload} onClose={closeModalUpload} onClickHandle={handleClick} onChangeHandle={handleFileChange} refObject={hiddenFileInput}/>
-        <Table videosInfo={uploadedVideosData} onClickEdit={onClickEdit} onClickDelete={openDeleteModal}/>
+
+        <UploadModal isOpen={isOpenUpload} onClose={closeModalUpload} onClickHandle={handleClick} onChangeHandle={handleFileChange} refObject={hiddenFileInput} uploadProgress={progress}/>
+
+        <Table videosInfo={uploadedVideosData} onClickEdit={onClickEdit} onClickDelete={openDeleteModal} loading={loadinguploadedVideos}/>
+    
         {selectedVideoInfo  && <DeleteModal isOpen={isOpenDeleteVideo} onClose={closeModalDeleteVideo} onDeleteHandle={onClickDelete} videoId={selectedVideoInfo.id}/> }
     </>
 }
