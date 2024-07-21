@@ -1,7 +1,5 @@
 import { MdFileUpload } from "react-icons/md";
 import "../css/Icons.css"
-import { useRef } from "react";
-import { uploadVideo } from "../../services/uploadService";
 
 
 export function UploadButton({onClickHandle, onChangeHandle, refObject}:{onClickHandle?:()=>void, onChangeHandle?:(key:any)=>void, refObject?: any}){

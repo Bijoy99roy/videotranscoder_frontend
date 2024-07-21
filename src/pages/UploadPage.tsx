@@ -1,4 +1,4 @@
-import { Suspense, useContext, useEffect, useRef, useState } from "react";
+import {  useContext, useEffect, useRef, useState } from "react";
 import { NavBar } from "../components/navigation/NavBar";
 import { Table } from "../components/content/Table";
 import { UploadModal } from "../components/upload/UploadModal";
@@ -22,7 +22,7 @@ export function UploadPage() {
     const [progress, setProgress] = useState<number>(-1);
     const [selectedVideoInfo, setSelectedVideoInfo] = useState<any>(null);
     const { user } = useContext(AuthContext);
-    const { messages, sendMessage } = useWebSocket();
+    const { sendMessage } = useWebSocket();
 
     const hiddenFileInput = useRef<HTMLInputElement>(null);
 
@@ -34,7 +34,7 @@ export function UploadPage() {
     const {  execute: DeleteVideoFn } = useAsyncFn(deleteVideo)
 
     const {  error: errorVideoInfo,  execute: fetchVideoInfo } = useAsyncFn(getVideoInfo);
-    const { loading: loadinguploadedVideos, value: uploadedVideosData, execute: fetchUploadedVideos } = useAsyncFn(getChannelVideos)
+    const { loading: loadinguploadedVideos, execute: fetchUploadedVideos } = useAsyncFn(getChannelVideos)
 
     const { loading: loadingUpload, error: errorUpload, execute: handleUpload } = useAsyncFn(uploadVideo)
 
@@ -106,7 +106,7 @@ export function UploadPage() {
 
     async function onClickDelete(videoId: string) {
 
-        const response =  await DeleteVideoFn(videoId)
+          await DeleteVideoFn(videoId)
         // setUploadedVideos(response)
 
         const uploadedVideos = await fetchUploadedVideos(user.id)
@@ -134,7 +134,7 @@ export function UploadPage() {
 
         <UploadModal isOpen={isOpenUpload} onClose={closeModalUpload} onClickHandle={handleClick} onChangeHandle={handleFileChange} refObject={hiddenFileInput} uploadProgress={progress}/>
 
-        <Table videosInfo={uploadedVideosData} onClickEdit={onClickEdit} onClickDelete={openDeleteModal} loading={loadinguploadedVideos}/>
+        <Table videosInfo={uploadedVideos} onClickEdit={onClickEdit} onClickDelete={openDeleteModal} loading={loadinguploadedVideos}/>
     
         {selectedVideoInfo  && <DeleteModal isOpen={isOpenDeleteVideo} onClose={closeModalDeleteVideo} onDeleteHandle={onClickDelete} videoId={selectedVideoInfo.id}/> }
     </>

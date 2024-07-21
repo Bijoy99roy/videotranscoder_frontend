@@ -1,7 +1,6 @@
-import { RefObject, useState } from "react";
+import { RefObject } from "react";
 import { Modal } from "../common/Modal";
 import { UploadButton } from "./UploadButton";
-import { uploadVideo } from "../../services/uploadService";
 import LinearWithValueLabel from "../loaders/LinearProgressWithLabel";
 
 export function UploadModal({isOpen=false, onClose, onClickHandle, onChangeHandle, refObject, uploadProgress}:{isOpen?:boolean, onClose?:()=>void, onChangeHandle?:(event: any)=>void, onClickHandle?:()=>void, refObject?:RefObject<HTMLInputElement>, uploadProgress: number}){

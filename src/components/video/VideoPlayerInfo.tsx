@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useAsyncFn } from "../../hooks/useAsync";
 import { getVideoInfo, addViews, getLikeDislikeStatus, addLikeDislike } from "../../services/videosService";
-import { getSubscriberCount, subscribeChannel, subscribeStatus } from "../../services/channelService";
+import { getSubscriberCount, subscribeStatus } from "../../services/channelService";
 import { Description } from "./Description";
 import { TitleBar } from "./TitleBar";
 import { MemoizedVideoPlayer } from "./VideoPlayer";
@@ -27,11 +27,11 @@ export function VideoPlayerInfo({ videoId, user }:{videoId:string | undefined, u
     const { execute: addViewsFn } = useAsyncFn(addViews);
     const { execute: LikeDisLikeFn } = useAsyncFn(addLikeDislike);
     const { execute: LikeStatusFn } = useAsyncFn(getLikeDislikeStatus);
-    const { execute: SubscribeFn } = useAsyncFn(subscribeChannel);
+
     const { execute: SubscribeStatusFn } = useAsyncFn(subscribeStatus);
     const { execute: SubscriberCountFn } = useAsyncFn(getSubscriberCount);
 
-    const { messages, sendMessage } = useWebSocket();
+    const { messages } = useWebSocket();
 
     useEffect(()=>{
         if (messages.length>0){
@@ -113,7 +113,7 @@ export function VideoPlayerInfo({ videoId, user }:{videoId:string | undefined, u
                 }));
                 setLikeDetails({likeCount: newLikeCount, dislikeCount: newDislikeCount});
 
-                const videoDetail = await LikeDisLikeFn(videoDetails?.id as string, user.id, type);
+                 await LikeDisLikeFn(videoDetails?.id as string, user.id, type);
             }
         } else if (type === 'DISLIKE') {
             if (likeStatus?.likeStatus === 'DISLIKE') {
@@ -137,7 +137,7 @@ export function VideoPlayerInfo({ videoId, user }:{videoId:string | undefined, u
                 }));
                 setLikeDetails({likeCount: newLikeCount, dislikeCount: newDislikeCount});
 
-                const videoDetail = await LikeDisLikeFn(videoDetails?.id as string, user.id, type);
+                 await LikeDisLikeFn(videoDetails?.id as string, user.id, type);
 
             }
         }

@@ -16,7 +16,7 @@ export function HomePage() {
     const { user } = useContext(AuthContext);
     const [videos, setVideos] = useState([]);
     const [openProfile, setOpenProfile] = useState<boolean>(true);
-    const {error, loading, value, execute} = useAsyncFn(getAllPublishedVideos)
+    const { loading, value, execute} = useAsyncFn(getAllPublishedVideos)
     const { isOpen: isOpenModal, openModal: openModalCreateChannel, closeModal: closeModalCreateChannel } = useModal();
 
     useEffect(() => {

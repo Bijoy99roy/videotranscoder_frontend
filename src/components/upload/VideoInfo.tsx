@@ -1,30 +1,25 @@
-import { useContext, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Modal } from "../common/Modal";
 import { PiHighDefinitionFill } from "react-icons/pi";
 import { HiUpload } from "react-icons/hi";
 import { Tooltip } from "@mui/material";
 import { useWebSocket } from "../../context/useSocketContext";
-import { AuthContext } from "../../context/authContext";
 import { publishVideo, updateVideoDetails, uploadThumbnail } from "../../services/uploadService";
 import { getVideoInfo } from "../../services/videosService";
 import { useAsyncFn } from "../../hooks/useAsync";
 import { useDebounce } from "../../hooks/useDebounce";
-import { useNavigate } from "react-router-dom";
 
 
 export function VideoInfo({isOpen=false, onClose, videoInfo}:{isOpen?:boolean, onClose?:()=>void, videoInfo:any}){
     if (!videoInfo.videoQueue) return
 
-    
-    const { user } = useContext(AuthContext);
-    const navigate = useNavigate()
+
     const [title, setTitle] = useState<string>(videoInfo?.title)
     const [description, setDescription] = useState<string>(videoInfo?.description)
     const [titleError, setTitleError] = useState<string>()
     const [disableSubmit, setDisableSubmit] = useState<boolean>(false)
     const descriptionRef = useRef<HTMLTextAreaElement>(null);
-    const { messages, sendMessage } = useWebSocket();
-    const [inputValue, setInputValue] = useState<string>('');
+    const { messages } = useWebSocket();
     const [processingStatus, setProcessingStatus] = useState((videoInfo.videoQueue.status=="QUEUED" || videoInfo.videoQueue.status=="IN_PROCESS")?"Video Processing":(videoInfo.videoQueue.status=="FAILED" ? "Video Processing Failed" : "Video Processed"))
     const [thumbnailUrl, setThumbnailUrl] = useState(videoInfo.thumbnailUrl)
     const { execute: uploadThumbnailFn} = useAsyncFn(uploadThumbnail)
@@ -32,7 +27,7 @@ export function VideoInfo({isOpen=false, onClose, videoInfo}:{isOpen?:boolean, o
     const { loading: updateVideoDetailsLoading,  execute: updateVideoDetailsFn} = useAsyncFn(updateVideoDetails)
     const { loading: publishVideoLoading, execute: publishVideoFn} = useAsyncFn(publishVideo)
     const [saving, setSaving] = useState(false)
-
+    
     const debounceDetails = useDebounce({
         title: title,
         description: description
@@ -54,25 +49,26 @@ export function VideoInfo({isOpen=false, onClose, videoInfo}:{isOpen?:boolean, o
             setThumbnailUrl(videoInfoResult.thumbnailUrl);
         }
     };
-
+   
     useEffect(()=>{
         if (messages.length>0){
-            const data =JSON.parse(messages[0])
+            messages.forEach((message: string)=>{
+                const data =JSON.parse(message)
 
-            if (data.type == "videoInfo"){
-                
-                const status = data.status
-                const thumbnail = data.thumbnailUrl
-                setThumbnailUrl(thumbnail)
-                setProcessingStatus(status=="Failed" ? "Video Processing Failed" : "Video Processed")                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
-
-            } else {
-                return
-            }
+                if(data.type === "videoInfo"){
+                    const status = data.status
+                    const thumbnail = data.thumbnailUrl
+                    setThumbnailUrl(thumbnail)
+                    setProcessingStatus(status=="Failed" ? "Video Processing Failed" : "Video Processed")
+                }else {
+                    return
+                }
+            })
+            
             
         }
 
-    }, [messages[0]])
+    }, [messages])
     
 
 
@@ -112,7 +108,7 @@ export function VideoInfo({isOpen=false, onClose, videoInfo}:{isOpen?:boolean, o
       
 
     useEffect(() => {
-
+            console.log(saving)
             setSaving(true)
   
 
@@ -214,7 +210,7 @@ export function VideoInfo({isOpen=false, onClose, videoInfo}:{isOpen?:boolean, o
                     </div>
                     
                     <button onClick={ ()=>{
-                        publishVideoFn(videoInfo.id).then((res:any)=>{
+                        publishVideoFn(videoInfo.id).then(()=>{
 
                             window.location.reload();
                         })

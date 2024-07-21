@@ -1,6 +1,6 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useAsyncFn } from "../hooks/useAsync";
-import { getChannelVideos, subscribeStatus } from "../services/channelService";
+import { getChannelVideos } from "../services/channelService";
 import { useContext, useEffect, useState } from "react";
 import { CountDays } from "../helper/dayCounter";
 import { VideoCards } from "../components/content/VideoCards";
@@ -11,12 +11,11 @@ import { createChannelFn, handleChannel } from "../utils/channelUtils";
 import { useModal } from "../hooks/useModal";
 import { CreateChannelModal } from "../components/channel/CreateChannelModal";
 import { ProfileDrowDown } from "../components/user/ProfileDrowDown";
-import { toggleSubscribe } from "../common/channelFunctions";
 
 export function ChannelPage(){
     const { channelId } = useParams<string>();
     const { user } = useContext(AuthContext);
-    const {error, loading, value, execute} = useAsyncFn(getChannelVideos)
+    const { execute} = useAsyncFn(getChannelVideos)
     const [videos, setVideos] = useState<any[]>([])
     const [channelOwner, setChannelOwner] = useState<boolean>(false)
     const [openProfile, setOpenProfile] = useState<boolean>(true);

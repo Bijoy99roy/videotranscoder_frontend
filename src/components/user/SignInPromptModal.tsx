@@ -1,9 +1,8 @@
-import { FaRegUserCircle } from "react-icons/fa";
+
 import { Modal } from "../common/Modal";
-import { useLocation } from "react-router-dom";
 
 export function SignInPromptModal({isOpen=false, onClose}:{isOpen?:boolean, onClose?:()=>void}){
-    const location = useLocation();
+
 
     return <>
     <Modal open={isOpen} onClose={onClose} enableClickEvents={true}>

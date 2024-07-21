@@ -1,15 +1,10 @@
-import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
+import axios, { AxiosError, AxiosRequestConfig } from "axios";
 
 interface Error {
     message: string[];
     statusCode: number;
   }
  
-interface Config {
-    url: string;
-    method: string;
-    data?: any
-}
 
 const api = axios.create({
 baseURL: import.meta.env.VITE_REACT_APP_SERVER_URL,

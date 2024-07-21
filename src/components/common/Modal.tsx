@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+
 import { LiaTimesSolid } from "react-icons/lia";
 
 export function Modal({open, onClose, children, enableClickEvents, disableX=false}:{open: any, onClose:any, children:any, enableClickEvents:boolean, disableX?:boolean}){

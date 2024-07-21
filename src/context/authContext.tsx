@@ -11,7 +11,6 @@ export function AuthProvider({children}:{ children: React.ReactNode}) {
     const fetchUser = async () => {
       try {
         const response = await axios.get('https://whole-adapted-mammoth.ngrok-free.app/api/v1/auth/current_user', { withCredentials: true });
-        console.log(response)
         setUser(response.data);
 
         if (response.data) {

@@ -1,20 +1,16 @@
-import { useState } from 'react'
 import './App.css'
-
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { HomePage } from './pages/HomePage'
 import { VideoPage } from './pages/VideoPage'
 import { UploadPage } from './pages/UploadPage'
 import { AuthProvider } from './context/authContext'
 import { WebSocketProvider } from './context/useSocketContext'
-import { LoggedInRoutes } from './utils/LoggedInRoutes'
 import { PrivateRoutes } from './utils/PrivateRoutes'
 import { ChannelPage } from './pages/ChannelPage'
 import { LikedVideoPage } from './pages/LikedVideoPage'
 import { SubscriptionPage } from './pages/SubscriptionPage'
 
 function App() {
-  const [count, setCount] = useState(0)
 
   return (
     <>

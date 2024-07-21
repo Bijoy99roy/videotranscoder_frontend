@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import videojs from "video.js";
 import 'videojs-seek-buttons/dist/videojs-seek-buttons.css';
 import 'videojs-seek-buttons';
@@ -14,7 +14,7 @@ import "../css/video.css"
 export const VideoPlayer = ({src}:{src:string}) => {
     const videoRef = useRef<any>(null);
     const playerRef = useRef<any>(null);
-    const [playerReady, setplayerReady] = useState(false);
+
 
     const videoPlayerOptions = {
       responsive: true,

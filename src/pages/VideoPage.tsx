@@ -4,7 +4,7 @@ import { VideoCards, VideoCardsHorizontal } from "../components/content/VideoCar
 import { useWindowSize } from "@uidotdev/usehooks";
 import { useContext, useState, useEffect } from "react";
 import { AuthContext } from "../context/authContext";
-import { getAllPublishedVideos, getVideos } from "../services/videosService";
+import { getAllPublishedVideos } from "../services/videosService";
 import { useAsyncFn } from "../hooks/useAsync";
 import { CountDays } from "../helper/dayCounter";
 // import { VideoInfo } from "../components/upload/VideoInfo";
