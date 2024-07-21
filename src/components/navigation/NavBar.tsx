@@ -14,7 +14,7 @@ export function NavBar({isUploadPage=false, onUploadClick, handleChannel, onClic
     const navigate = useNavigate()
     const { user } = useContext(AuthContext);
 
-
+    console.log(user)
     return <>
     <div className="flex justify-between border-b-2 border-hidden my-2">
         <div className="flex flex-col justify-center ml-5 md:text-3xl font-mono cursor-pointer">
