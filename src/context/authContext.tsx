@@ -10,12 +10,12 @@ export function AuthProvider({children}:{ children: React.ReactNode}) {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const response = await axios.get('http://whole-adapted-mammoth.ngrok-free.app/api/v1/auth/current_user', { withCredentials: true });
+        const response = await axios.get('https://whole-adapted-mammoth.ngrok-free.app/api/v1/auth/current_user', { withCredentials: true });
 
         setUser(response.data);
 
         if (response.data) {
-          const userDataResponse = await axios.get('http://whole-adapted-mammoth.ngrok-free.app/api/v1/auth/user_data', { withCredentials: true });
+          const userDataResponse = await axios.get('https://whole-adapted-mammoth.ngrok-free.app/api/v1/auth/user_data', { withCredentials: true });
 
           setUserData(userDataResponse.data);
         }

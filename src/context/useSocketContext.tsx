@@ -35,7 +35,7 @@ export const WebSocketProvider = ({ children }: { children:React.ReactNode }) =>
         } else {
 
             console.warn('Shared Workers are not supported in your browser. Falling back to regular WebSocket.');
-            socketRef.current = new WebSocket('ws://whole-adapted-mammoth.ngrok-free.app');
+            socketRef.current = new WebSocket('wss://whole-adapted-mammoth.ngrok-free.app');
 
 
             socketRef.current.onmessage = (event) => {
