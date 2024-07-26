@@ -11,28 +11,33 @@ const WebSocketContext = createContext<WebSocketContextProps | null>(null);
 
 export const WebSocketProvider = ({ children }: { children:React.ReactNode }) => {
     const [messages, setMessages] = useState<string[]>([]);
-    const workerRef = useRef<SharedWorker | null>(null);
+    // const workerRef = useRef<SharedWorker | null>(null);
     const socketRef = useRef<WebSocket | null>(null);
     const portRef = useRef<MessagePort | null>(null);
 
     useEffect(() => {
-        if (!window.SharedWorker) {
+        /**
+         * Shared worked is code segment causing trouble for the app to open in browser 
+         *
+         */
 
-            workerRef.current = new SharedWorker('/shared-worker.js');
-            portRef.current = workerRef.current.port;
+        // if (!window.SharedWorker) {
+
+        //     workerRef.current = new SharedWorker('/shared-worker.js');
+        //     portRef.current = workerRef.current.port;
 
 
-            portRef.current.onmessage = (event: MessageEvent) => {
-                setMessages((prevMessages) => [...prevMessages, event.data]);
-            };
+        //     portRef.current.onmessage = (event: MessageEvent) => {
+        //         setMessages((prevMessages) => [...prevMessages, event.data]);
+        //     };
 
 
-            return () => {
-                if (portRef.current) {
-                    portRef.current.close();
-                }
-            };
-        } else {
+        //     return () => {
+        //         if (portRef.current) {
+        //             portRef.current.close();
+        //         }
+        //     };
+        // } else {
 
             console.warn('Shared Workers are not supported in your browser. Falling back to regular WebSocket.');
             socketRef.current = new WebSocket('wss://whole-adapted-mammoth.ngrok-free.app');
@@ -48,7 +53,7 @@ export const WebSocketProvider = ({ children }: { children:React.ReactNode }) =>
                     console.warn('Shared Workers closed');
                 }
             };
-        }
+        // }
     }, []);
 
 
