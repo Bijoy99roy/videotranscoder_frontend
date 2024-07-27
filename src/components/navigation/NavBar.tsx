@@ -61,7 +61,7 @@ export function NavBar({isUploadPage=false, onUploadClick, handleChannel, onClic
                     <img src={user.photo} alt="" className="rounded-full"/>
                 </div>
                : 
-               <a href="https://whole-adapted-mammoth.ngrok-free.app/api/v1/auth/google">
+               <a href={`${import.meta.env.VITE_REACT_APP_SERVER_URL}/api/v1/auth/google`}>
                 <div className="flex">
                     <FaRegUserCircle  className="mx-auto text-blue-500 mr-2 FaRegUserCircle"/>
                     <div className="flex font-bold text-blue-500 text-xs md:text-base">
